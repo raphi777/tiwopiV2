@@ -1,11 +1,28 @@
 import { View, Image, StyleSheet, Text } from "react-native";
 import React from "react";
 import { FontAwesome } from "@expo/vector-icons";
+import BottomButtons from "../components/BottomButtons";
 
-export default function Swipeableimage({ user }) {
+export default function Swipeableimage({
+  user,
+  willLike,
+  willPass,
+  handleLikePress,
+  handlePassPress,
+}) {
   return (
-    <View>
+    <View style={styles.container}>
       <Image source={{ uri: user.picture.large }} style={styles.photo} />
+      {willLike && (
+        <View style={styles.likeBox}>
+          <Text style={{ ...styles.textPrimary, color: "#64EDCC" }}>LIKE</Text>
+        </View>
+      )}
+      {willPass && (
+        <View style={styles.passBox}>
+          <Text style={{ ...styles.textPrimary, color: "#F06795" }}>PASS</Text>
+        </View>
+      )}
       <View style={styles.textContainer}>
         <View style={styles.textRow}>
           <Text style={[styles.textPrimary, styles.textShadow]}>
@@ -21,12 +38,40 @@ export default function Swipeableimage({ user }) {
             {user.location.city}
           </Text>
         </View>
+        <View style={styles.buttons}>
+          <BottomButtons
+            handleLikePress={handleLikePress}
+            handlePassPress={handlePassPress}
+          />
+        </View>
       </View>
     </View>
   );
 }
 
+const boxStyle = {
+  position: "absolute",
+  top: "50%",
+  paddingTop: 10,
+  paddingBottom: 10,
+  paddingLeft: 20,
+  paddingRight: 20,
+  borderWidth: 3,
+  borderRadius: 10,
+};
+
 const styles = StyleSheet.create({
+  container: { padding: 10 },
+  likeBox: {
+    ...boxStyle,
+    left: 40,
+    borderColor: "#64EDCC",
+  },
+  passBox: {
+    ...boxStyle,
+    right: 40,
+    borderColor: "#F06795",
+  },
   photo: {
     height: "100%",
     resizeMode: "cover",
@@ -34,8 +79,10 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     position: "absolute",
+    width: "100%",
     bottom: 20,
-    left: 20,
+    paddingLeft: 20,
+    paddingRight: 20,
   },
   textRow: {
     flexDirection: "row",
@@ -56,5 +103,8 @@ const styles = StyleSheet.create({
     textShadowColor: "rgba(0, 0, 0, 0.80)",
     textShadowOffset: { width: -1, height: -1 },
     textShadowRadius: 10,
+  },
+  buttons: {
+    alignSelf: "center",
   },
 });

@@ -1,11 +1,14 @@
 import { StyleSheet, View, Alert } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+
 import Swipeableimage from "../components/Swipeableimage";
+import Swipes from "../components/Swipes";
 
 const Home = () => {
   const [users, setUsers] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const swipesRef = useRef(null);
 
   async function fetchUsers() {
     try {
@@ -25,10 +28,48 @@ const Home = () => {
     fetchUsers();
   }, []);
 
+  function handleLike() {
+    console.log("like");
+    nextUser();
+  }
+
+  function handlePass() {
+    console.log("pass");
+    nextUser();
+  }
+
+  function handleLikePress() {
+    swipesRef.current.openLeft();
+  }
+
+  function handlePassPress() {
+    swipesRef.current.openRight();
+  }
+
+  function nextUser() {
+    const nextIndex = users.length - 2 === currentIndex ? 0 : currentIndex + 1;
+    setCurrentIndex(nextIndex);
+  }
+
   return (
     <View style={styles.container}>
       <View stlye={styles.swipes}>
-        {users.length > 1 && <Swipeableimage user={users[currentIndex]} />}
+        {users.length > 1 &&
+          users.map(
+            (u, i) =>
+              currentIndex === i && (
+                <Swipes
+                  key={i}
+                  ref={swipesRef}
+                  users={users}
+                  currentIndex={currentIndex}
+                  handleLike={handleLike}
+                  handlePass={handlePass}
+                  handleLikePress={handleLikePress}
+                  handlePassPress={handlePassPress}
+                />
+              )
+          )}
       </View>
     </View>
   );

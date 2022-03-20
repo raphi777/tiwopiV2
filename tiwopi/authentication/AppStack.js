@@ -28,7 +28,7 @@ const AppStack = () => {
       tabBarOptions={{
         activeTintColor: "#F06795",
         inactiveTintColor: "grey",
-        labelStyle: { paddingBottom: 10, fontSize: 10 },
+        labelStyle: { paddingBottom: 4, fontSize: 10 },
         style: { padding: 10, height: 70 },
       }}
     >
