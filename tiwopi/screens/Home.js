@@ -1,26 +1,35 @@
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import React from "react";
-import { auth } from "../firebase";
-import { signOut } from "firebase/auth";
-import { useNavigation } from "@react-navigation/core";
+import { StyleSheet, View, Alert } from "react-native";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import Swipeableimage from "../components/Swipeableimage";
 
 const Home = () => {
-  const navigation = useNavigation();
+  const [users, setUsers] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  const handleSignOut = () => {
-    signOut(auth)
-      .then(() => {
-        navigation.replace("Login");
-      })
-      .catch((error) => alert(error.message));
-  };
+  async function fetchUsers() {
+    try {
+      const { data } = await axios.get(
+        "https://randomuser.me/api/?gender=female&results=50"
+      );
+      setUsers(data.results);
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Error getting users", "", [
+        { text: "Retry", onPress: () => fetchUsers() },
+      ]);
+    }
+  }
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
   return (
     <View style={styles.container}>
-      <Text>Email: {auth.currentUser?.email}</Text>
-      <TouchableOpacity onPress={handleSignOut} style={styles.button}>
-        <Text style={styles.buttonText}>Sign Out</Text>
-      </TouchableOpacity>
+      <View stlye={styles.swipes}>
+        {users.length > 1 && <Swipeableimage user={users[currentIndex]} />}
+      </View>
     </View>
   );
 };
@@ -30,20 +39,18 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
   },
-  button: {
-    backgroundColor: "#0782F9",
-    width: "60%",
-    padding: 15,
-    borderRadius: 10,
-    alignItems: "center",
-    marginTop: 40,
-  },
-  buttonText: {
-    color: "white",
-    fontWeight: "700",
-    fontSize: 16,
+  swipes: {
+    flex: 1,
+    padding: 50,
+    paddingTop: 8,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 3,
+    },
+    shadowOpacity: 0.29,
+    shadowRadius: 4.65,
+    elevation: 7,
   },
 });

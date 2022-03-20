@@ -6,53 +6,13 @@ import {
   Text,
   TouchableOpacity,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import { auth } from "../firebase";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-} from "firebase/auth";
-import { useNavigation } from "@react-navigation/core";
+import React, { useContext, useState } from "react";
+import { AuthContext } from "../authentication/AuthProvider";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
-  const navigation = useNavigation();
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, user => {
-      if (user) {
-        navigation.navigate("Home");
-      }
-    });
-
-    return unsubscribe;
-  }, []);
-
-  const handleSignUp = () => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCedentials) => {
-        const user = userCedentials.user;
-        console.log("Registered:", user.email);
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
-  };
-
-  const handleLogin = () => {
-    console.log("login was triggered")
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCedentials) => {
-        const user = userCedentials.user;
-        console.log("Logged in with:", user.email);
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
-  };
+  const { login, register } = useContext(AuthContext);
 
   return (
     <KeyboardAvoidingView style={styles.container} behaviour="padding">
@@ -73,16 +33,14 @@ const Login = () => {
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          onPress={() => {
-            handleLogin();
-          }}
+          onPress={() => login(email, password)}
           style={styles.button}
         >
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            handleSignUp();
+            register(email, password);
           }}
           style={[styles.button, styles.buttonOutline]}
         >
