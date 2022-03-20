@@ -9,10 +9,22 @@ import {
 import React, { useContext, useState } from "react";
 import { AuthContext } from "../authentication/AuthProvider";
 
-const Login = ({navigation}) => {
+const Register = ({ navigation }) => {
+  let futureUser = {};
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { login, register } = useContext(AuthContext);
+  const [repeatPassword, setRepeatPassword] = useState("");
+  const { register } = useContext(AuthContext);
+
+  function handleRegister() {
+    if (password === repeatPassword) {
+      //register(email, password);
+      futureUser = {email: email, password: password}
+      navigation.navigate("RegisterImages", futureUser)
+    } else {
+      alert("Passwords are different.");
+    }
+  }
 
   return (
     <KeyboardAvoidingView style={styles.container} behaviour="padding">
@@ -30,21 +42,28 @@ const Login = ({navigation}) => {
           style={styles.input}
           secureTextEntry
         />
+        <TextInput
+          placeholder="Repeat Password"
+          value={repeatPassword}
+          onChangeText={(text) => setRepeatPassword(text)}
+          style={styles.input}
+          secureTextEntry
+        />
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          onPress={() => login(email, password)}
+          onPress={() => handleRegister()}
           style={styles.button}
         >
-          <Text style={styles.buttonText}>Login</Text>
+          <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.goToRegister}
-          onPress={() => navigation.navigate("Register")}
+          onPress={() => navigation.navigate("Login")}
         >
           <Text style={styles.goToRegisterText}>
-            Don't have an acount?
-            {"\n"}Create here
+            You already have an acount?
+            {"\n"}Log-in here
           </Text>
         </TouchableOpacity>
       </View>
@@ -52,7 +71,7 @@ const Login = ({navigation}) => {
   );
 };
 
-export default Login;
+export default Register;
 
 const styles = StyleSheet.create({
   container: {
