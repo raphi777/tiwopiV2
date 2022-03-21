@@ -1,11 +1,41 @@
 import React from "react";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { FontAwesome } from "@expo/vector-icons";
 
 import Home from "../screens/Home";
 import Settings from "../screens/Settings";
+import Profile from "../screens/Profile";
+import ProfileActionName from "../screens/ProfileActionName";
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
+
+const ProfileStack = ({ navigation }) => (
+  <Stack.Navigator>
+    <Stack.Screen
+      name="Profile"
+      component={Profile}
+      options={{
+        headerShown: false,
+      }}
+    />
+    <Stack.Screen
+      name="ProfileActionName"
+      component={ProfileActionName}
+      options={{
+        headerTitle: "Edit Name",
+        headerBackTitleVisible: false,
+        headerTitleAlign: "center",
+        headerStyle: {
+          backgroundColor: "#fff",
+          shadowColor: "#fff",
+          elevation: 0,
+        },
+      }}
+    />
+  </Stack.Navigator>
+);
 
 const AppStack = () => {
   return (
@@ -20,6 +50,8 @@ const AppStack = () => {
             iconName = focused ? "home" : "home";
           } else if (rn === "Settings") {
             iconName = focused ? "gear" : "gear";
+          } else if (rn === "Profile") {
+            iconName = focused ? "user" : "user";
           }
 
           return <FontAwesome name={iconName} size={size} color={color} />;
@@ -32,6 +64,7 @@ const AppStack = () => {
         style: { padding: 10, height: 70 },
       }}
     >
+      <Tab.Screen name="Profile" component={ProfileStack} />
       <Tab.Screen name="Home" component={Home} />
       <Tab.Screen name="Settings" component={Settings} />
     </Tab.Navigator>
