@@ -7,6 +7,7 @@ import Home from "../screens/Home";
 import Settings from "../screens/Settings";
 import Profile from "../screens/Profile";
 import ProfileActionName from "../screens/ProfileActionName";
+import ProfileActionAudioRecordings from "../screens/ProfileActionAudioRecordings";
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -25,6 +26,20 @@ const ProfileStack = ({ navigation }) => (
       component={ProfileActionName}
       options={{
         headerTitle: "Edit Name",
+        headerBackTitleVisible: false,
+        headerTitleAlign: "center",
+        headerStyle: {
+          backgroundColor: "#fff",
+          shadowColor: "#fff",
+          elevation: 0,
+        },
+      }}
+    />
+    <Stack.Screen
+      name="ProfileActionAudioRecordings"
+      component={ProfileActionAudioRecordings}
+      options={{
+        headerTitle: "Your Audio Recordings",
         headerBackTitleVisible: false,
         headerTitleAlign: "center",
         headerStyle: {
